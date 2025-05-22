@@ -13,7 +13,7 @@ const Providers = (props: {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={config} initialState={props.initialState}>
       <QueryClientProvider client={queryClient}>
         {props.children}
       </QueryClientProvider>
