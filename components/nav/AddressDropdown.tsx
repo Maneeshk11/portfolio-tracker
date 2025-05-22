@@ -8,6 +8,8 @@ import {
 import { Button } from "../ui/button";
 import formatAddress from "@/lib/address/utils";
 import { useAccount, useDisconnect } from "wagmi";
+import { injected } from "wagmi/connectors";
+import { getConfig } from "@/lib/configs/wagmi";
 
 const AddressDropdown = () => {
   const { address } = useAccount();
@@ -50,7 +52,7 @@ const AddressDropdown = () => {
           <ExternalLink className="w-4 h-4" />
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => disconnect()}
+          onClick={() => disconnect({})}
           className="cursor-pointer flex items-center justify-between"
         >
           Disconnect

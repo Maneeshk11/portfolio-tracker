@@ -1,17 +1,12 @@
 import { Bitcoin, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { useAccount, useBalance } from "wagmi";
-import { formatUnits } from "viem";
-import useTokenPrice from "@/hooks/tokens/useTokenPrice";
-
+import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
+import { formatNumber } from "@/lib/utils";
+import { useAccount } from "wagmi";
 const TotalWorthCard = () => {
   const { address } = useAccount();
-  const { data: ethData } = useBalance({
-    address: address as `0x${string}`,
-  });
-
-  const { data: usdData } = useTokenPrice("ethereum");
+  const { portfolio, refetchPortfolio } = usePortfolioContext();
 
   return (
     <Card>
@@ -25,24 +20,23 @@ const TotalWorthCard = () => {
           <div className="flex flex-col space-y-1">
             <span className="text-sm ">Worth (USD)</span>
             <span className="text-2xl font-medium text-muted-foreground">
-              {usdData} USD
+              ${formatNumber(portfolio.worth.usd)}
             </span>
           </div>
           <div className="flex flex-col space-y-1">
             <span className="text-sm">Worth (ETH)</span>
             <span className="text-2xl font-medium text-muted-foreground">
-              {parseFloat(
-                formatUnits(
-                  ethData?.value ?? BigInt(0),
-                  ethData?.decimals ?? 18
-                )
-              ).toFixed(5)}{" "}
-              {ethData?.symbol}
+              {portfolio.worth.eth} ETH
             </span>
           </div>
         </div>
 
-        <Button variant="outline" size="sm" className="cursor-pointer">
+        <Button
+          variant="outline"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => refetchPortfolio(address as `0x${string}`)}
+        >
           <RefreshCw className="w-4 h-4" /> Sync
         </Button>
       </CardContent>
