@@ -1,8 +1,18 @@
 import { Bitcoin, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
+import { useAccount, useBalance } from "wagmi";
+import { formatUnits } from "viem";
+import useTokenPrice from "@/hooks/tokens/useTokenPrice";
 
 const TotalWorthCard = () => {
+  const { address } = useAccount();
+  const { data: ethData } = useBalance({
+    address: address as `0x${string}`,
+  });
+
+  const { data: usdData } = useTokenPrice("ethereum");
+
   return (
     <Card>
       <CardHeader>
@@ -15,13 +25,19 @@ const TotalWorthCard = () => {
           <div className="flex flex-col space-y-1">
             <span className="text-sm ">Worth (USD)</span>
             <span className="text-2xl font-medium text-muted-foreground">
-              1000 USD
+              {usdData} USD
             </span>
           </div>
           <div className="flex flex-col space-y-1">
             <span className="text-sm">Worth (ETH)</span>
             <span className="text-2xl font-medium text-muted-foreground">
-              1000 ETH
+              {parseFloat(
+                formatUnits(
+                  ethData?.value ?? BigInt(0),
+                  ethData?.decimals ?? 18
+                )
+              ).toFixed(5)}{" "}
+              {ethData?.symbol}
             </span>
           </div>
         </div>
