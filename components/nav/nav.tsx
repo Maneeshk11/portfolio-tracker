@@ -9,8 +9,11 @@ const Nav = () => {
   const { isConnected } = useAccount();
 
   return (
-    <nav className="flex justify-between p-4 ">
-      <Link href="/" className="text-xl font-medium font-mono">
+    <nav className="flex justify-between items-center">
+      <Link
+        href="/"
+        className="text-xl font-medium font-mono text-secondary-foreground"
+      >
         Portfolio Tracker
       </Link>
       {isConnected ? <AddressDropdown /> : <ConnectButton />}
