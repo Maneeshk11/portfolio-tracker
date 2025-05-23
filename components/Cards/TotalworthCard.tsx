@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { formatNumber } from "@/lib/utils";
 const TotalWorthCard = () => {
-  const { portfolio, setIsRefetching } = usePortfolioContext();
+  const { portfolio, setIsRefetching, isRefetching } = usePortfolioContext();
 
   return (
     <Card>
@@ -33,9 +33,13 @@ const TotalWorthCard = () => {
           variant="outline"
           size="sm"
           className="cursor-pointer"
-          onClick={() => setIsRefetching(true)}
+          onClick={() => {
+            setIsRefetching(true);
+          }}
+          disabled={isRefetching}
         >
-          <RefreshCw className="w-4 h-4" /> Sync
+          <RefreshCw className={`w-4 h-4 ${isRefetching && "animate-spin"}`} />{" "}
+          {isRefetching ? "Syncing" : "Sync"}
         </Button>
       </CardContent>
     </Card>

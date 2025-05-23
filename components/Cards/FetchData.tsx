@@ -15,8 +15,10 @@ const FetchData = () => {
 
   useEffect(() => {
     if (isRefetching) {
-      refetch();
-      setIsRefetching(false);
+      setTimeout(() => {
+        refetch();
+        setIsRefetching(false);
+      }, 1000);
     }
     if (portfolio) {
       setPortfolio({
