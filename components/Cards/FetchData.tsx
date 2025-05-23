@@ -5,22 +5,26 @@ import { useEffect } from "react";
 import { useAccount } from "wagmi";
 const FetchData = () => {
   const { address } = useAccount();
-  const { setPortfolio } = usePortfolioContext();
+  const { setPortfolio, isRefetching, setIsRefetching } = usePortfolioContext();
 
-  const { data: portfolio } = useQuery({
+  const { data: portfolio, refetch } = useQuery({
     queryKey: ["portfolio", address],
     queryFn: () => getPortfolio(address as `0x${string}`),
     enabled: !!address,
   });
 
   useEffect(() => {
+    if (isRefetching) {
+      refetch();
+      setIsRefetching(false);
+    }
     if (portfolio) {
       setPortfolio({
         worth: { eth: portfolio.totalWorth.eth, usd: portfolio.totalWorth.usd },
         assets: portfolio.assets,
       });
     }
-  }, [portfolio]);
+  }, [isRefetching, portfolio]);
   return null;
 };
 

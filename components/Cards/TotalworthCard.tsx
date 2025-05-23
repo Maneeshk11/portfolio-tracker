@@ -3,10 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { formatNumber } from "@/lib/utils";
-import { useAccount } from "wagmi";
 const TotalWorthCard = () => {
-  const { address } = useAccount();
-  const { portfolio, refetchPortfolio } = usePortfolioContext();
+  const { portfolio, setIsRefetching } = usePortfolioContext();
 
   return (
     <Card>
@@ -35,7 +33,7 @@ const TotalWorthCard = () => {
           variant="outline"
           size="sm"
           className="cursor-pointer"
-          onClick={() => refetchPortfolio(address as `0x${string}`)}
+          onClick={() => setIsRefetching(true)}
         >
           <RefreshCw className="w-4 h-4" /> Sync
         </Button>

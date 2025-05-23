@@ -8,12 +8,11 @@ import {
 import { Button } from "../ui/button";
 import formatAddress from "@/lib/address/utils";
 import { useAccount, useDisconnect } from "wagmi";
-import { injected } from "wagmi/connectors";
-import { getConfig } from "@/lib/configs/wagmi";
-
+import { useRouter } from "next/navigation";
 const AddressDropdown = () => {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
+  const router = useRouter();
 
   return (
     <DropdownMenu>
@@ -52,7 +51,10 @@ const AddressDropdown = () => {
           <ExternalLink className="w-4 h-4" />
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => disconnect({})}
+          onClick={() => {
+            disconnect();
+            router.refresh();
+          }}
           className="cursor-pointer flex items-center justify-between"
         >
           Disconnect
