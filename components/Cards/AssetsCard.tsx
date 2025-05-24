@@ -26,13 +26,13 @@ const AssetsCard = () => {
         <Table className="rounded-lg overflow-hidden">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
-              <TableHead className="font-medium">Name</TableHead>
-              <TableHead className="text-right font-medium">Amount</TableHead>
-              <TableHead className="text-right font-medium">
+              <TableHead className="font-normal">Name</TableHead>
+              <TableHead className="text-right font-normal">Amount</TableHead>
+              <TableHead className="text-right font-normal">
                 24h Change
               </TableHead>
-              <TableHead className="text-right font-medium">Price</TableHead>
-              <TableHead className="text-right font-medium">Total</TableHead>
+              <TableHead className="text-right font-normal">Price</TableHead>
+              <TableHead className="text-right font-normal">Total</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -74,7 +74,7 @@ const AssetsCard = () => {
                         </div>
 
                         <div className="flex flex-col">
-                          <span className="text-base font-medium text-secondary-foreground">
+                          <span className="text-base font-normal text-secondary-foreground">
                             {asset.name}
                           </span>
                           <span className="text-xs text-muted-foreground">

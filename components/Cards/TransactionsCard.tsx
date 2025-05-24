@@ -47,13 +47,13 @@ const TransactionsCard = () => {
         <Table className="rounded-lg overflow-hidden">
           <TableHeader>
             <TableRow>
-              <TableHead className="font-medium">Type</TableHead>
-              <TableHead className="font-medium">Asset</TableHead>
-              <TableHead className="font-medium text-right">
+              <TableHead className="font-normal">Type</TableHead>
+              <TableHead className="font-normal">Asset</TableHead>
+              <TableHead className="font-normal text-right">
                 Current Value
               </TableHead>
-              <TableHead className="font-medium text-right">Amount</TableHead>
-              <TableHead className="font-medium text-right">Date</TableHead>
+              <TableHead className="font-normal text-right">Amount</TableHead>
+              <TableHead className="font-normal text-right">Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,7 +66,7 @@ const TransactionsCard = () => {
                     : "bg-secondary/10 hover:bg-secondary/20"
                 }`}
               >
-                <TableCell className="font-medium text-base ">
+                <TableCell className="font-normal text-base ">
                   {transaction.from === address?.toLowerCase() ? (
                     <div className="flex items-center gap-2">
                       <ArrowUpRight className="w-4 h-4 text-green-500" />
