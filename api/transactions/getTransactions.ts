@@ -13,5 +13,18 @@ export const getTransactions = async (address: `0x${string}`) => {
       AssetTransfersCategory.ERC1155,
     ],
   });
-  return transactionsTo;
+
+  const transactionsFrom = await alchemy.core.getAssetTransfers({
+    fromAddress: address,
+    withMetadata: true,
+    category: [
+      AssetTransfersCategory.EXTERNAL,
+      AssetTransfersCategory.INTERNAL,
+      AssetTransfersCategory.ERC20,
+      AssetTransfersCategory.ERC721,
+      AssetTransfersCategory.ERC1155,
+    ],
+  });
+
+  return [...transactionsTo.transfers, ...transactionsFrom.transfers];
 };

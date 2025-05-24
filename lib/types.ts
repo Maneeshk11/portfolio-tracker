@@ -15,4 +15,4 @@ export type Asset = {
   total?: Worth;
 };
 
-export type Transaction = AssetTransfersWithMetadataResponse;
+export type Transaction = AssetTransfersWithMetadataResponse["transfers"][0];
