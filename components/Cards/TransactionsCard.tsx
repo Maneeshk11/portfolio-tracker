@@ -44,7 +44,7 @@ const TransactionsCard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
+        <Table className="rounded-lg overflow-hidden">
           <TableHeader>
             <TableRow>
               <TableHead className="font-medium">Type</TableHead>
@@ -57,9 +57,16 @@ const TransactionsCard = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {portfolio.transactions.map((transaction) => (
-              <TableRow key={transaction.uniqueId}>
-                <TableCell className="font-medium text-base">
+            {portfolio.transactions.map((transaction, index) => (
+              <TableRow
+                key={index}
+                className={`border-b-0 ${
+                  index % 2 === 0
+                    ? "bg-primary/10 hover:bg-primary/20"
+                    : "bg-secondary/10 hover:bg-secondary/20"
+                }`}
+              >
+                <TableCell className="font-medium text-base ">
                   {transaction.from === address?.toLowerCase() ? (
                     <div className="flex items-center gap-2">
                       <ArrowUpRight className="w-4 h-4 text-green-500" />

@@ -23,7 +23,7 @@ const AssetsCard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
+        <Table className="rounded-lg overflow-hidden">
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-medium">Name</TableHead>
@@ -46,7 +46,7 @@ const AssetsCard = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              portfolio.assets.map((asset) => {
+              portfolio.assets.map((asset, index) => {
                 // Mock data for 24h change - ideally this should come from the asset data
                 // This is just a placeholder until real data is available
                 const priceChange = Math.random() * 10 - 5; // Random value between -5 and 5
@@ -54,8 +54,12 @@ const AssetsCard = () => {
 
                 return (
                   <TableRow
-                    key={asset.address}
-                    className="transition-colors hover:bg-muted/30"
+                    key={index}
+                    className={`border-b-0 ${
+                      index % 2 === 0
+                        ? "bg-primary/10 hover:bg-primary/20"
+                        : "bg-secondary/10 hover:bg-secondary/20"
+                    }`}
                   >
                     <TableCell>
                       <div className="flex items-center gap-3">
