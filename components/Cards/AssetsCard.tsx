@@ -84,7 +84,7 @@ const AssetsCard = () => {
                       </div>
                     </TableCell>
                     <TableCell className="text-right font-semibold">
-                      {formatNumber(Number(asset.amount))}
+                      {formatNumber(Number(asset.amount))} {asset.symbol}
                     </TableCell>
                     <TableCell
                       className={cn(
