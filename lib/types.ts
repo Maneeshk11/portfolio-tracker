@@ -1,3 +1,5 @@
+import { AssetTransfersWithMetadataResponse } from "alchemy-sdk";
+
 export type Worth = {
   usd: number;
   eth: number;
@@ -12,3 +14,5 @@ export type Asset = {
   price?: number;
   total?: Worth;
 };
+
+export type Transaction = AssetTransfersWithMetadataResponse;

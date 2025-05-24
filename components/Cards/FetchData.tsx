@@ -24,6 +24,7 @@ const FetchData = () => {
       setPortfolio({
         worth: { eth: portfolio.totalWorth.eth, usd: portfolio.totalWorth.usd },
         assets: portfolio.assets,
+        transactions: [],
       });
     }
   }, [isRefetching, portfolio]);

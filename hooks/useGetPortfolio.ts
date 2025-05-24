@@ -4,6 +4,7 @@ import { formatUnits } from "viem";
 import { getBalance } from "wagmi/actions";
 import { getConfig } from "@/lib/configs/wagmi";
 import getTokenPrices from "@/api/token/getTokenPrices";
+import { getTransactions } from "@/api/transactions/getTransactions";
 
 const getPortfolio = async (address: `0x${string}`) => {
   const assets: Asset[] = [];
@@ -55,7 +56,11 @@ const getPortfolio = async (address: `0x${string}`) => {
     usd: totalWorthUSD,
   };
 
-  return { assets, totalWorth };
+  const transactions = await getTransactions(address);
+
+  console.log("txs: ", transactions);
+
+  return { assets, totalWorth, transactions };
 };
 
 export default getPortfolio;

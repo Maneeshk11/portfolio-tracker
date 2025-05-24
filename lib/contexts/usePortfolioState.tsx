@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { createContext, useContext } from "react";
-import { Asset, Worth } from "../types";
+import { Asset, Worth, Transaction } from "../types";
 
 type PortfolioState = {
   worth: Worth;
   assets: Asset[];
+  transactions: Transaction[];
 };
 
 interface PortfolioContextType {
@@ -38,6 +39,7 @@ export const PortfolioContextProvider = ({
   const [portfolio, setPortfolio] = useState<PortfolioState>({
     worth: { usd: 0, eth: 0 },
     assets: [],
+    transactions: [],
   });
   const [isRefetching, setIsRefetching] = useState(false);
 
