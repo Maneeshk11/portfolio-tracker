@@ -1,5 +1,5 @@
 import alchemy from "@/lib/configs/alchemy";
-import { AssetTransfersCategory } from "alchemy-sdk";
+import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
 
 export const getTransactions = async (address: `0x${string}`) => {
   const transactionsTo = await alchemy.core.getAssetTransfers({
@@ -12,6 +12,7 @@ export const getTransactions = async (address: `0x${string}`) => {
       AssetTransfersCategory.ERC721,
       AssetTransfersCategory.ERC1155,
     ],
+    order: SortingOrder.DESCENDING,
   });
 
   const transactionsFrom = await alchemy.core.getAssetTransfers({
@@ -24,7 +25,12 @@ export const getTransactions = async (address: `0x${string}`) => {
       AssetTransfersCategory.ERC721,
       AssetTransfersCategory.ERC1155,
     ],
+    order: SortingOrder.DESCENDING,
   });
 
-  return [...transactionsTo.transfers, ...transactionsFrom.transfers];
+  return [...transactionsTo.transfers, ...transactionsFrom.transfers].sort(
+    (a, b) =>
+      new Date(b.metadata.blockTimestamp).getTime() -
+      new Date(a.metadata.blockTimestamp).getTime()
+  );
 };

@@ -10,7 +10,7 @@ import {
 } from "../ui/table";
 import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { useAccount } from "wagmi";
-
+import Image from "next/image";
 const TransactionsCard = () => {
   const { portfolio } = usePortfolioContext();
   const { address } = useAccount();
@@ -72,7 +72,17 @@ const TransactionsCard = () => {
                     </div>
                   )}
                 </TableCell>
-                <TableCell className="font-semibold">
+                <TableCell className="font-semibold flex items-center gap-2">
+                  <Image
+                    src={
+                      portfolio.assets.find(
+                        (asset) => asset.symbol === transaction.asset
+                      )?.image ?? ""
+                    }
+                    alt={transaction.asset ?? ""}
+                    width={20}
+                    height={20}
+                  />{" "}
                   {transaction.asset}
                 </TableCell>
                 <TableCell className="font-semibold text-right">
