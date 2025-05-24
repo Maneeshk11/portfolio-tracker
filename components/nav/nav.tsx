@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useAccount } from "wagmi";
 import ConnectButton from "./ConnectButton";
 import AddressDropdown from "./AddressDropdown";
+import ThemeToggle from "./ThemeToggle";
 
 const Nav = () => {
   const { isConnected } = useAccount();
@@ -16,7 +17,10 @@ const Nav = () => {
       >
         Portfolio Tracker
       </Link>
-      {isConnected ? <AddressDropdown /> : <ConnectButton />}
+      <div className="flex items-center gap-2">
+        <ThemeToggle />
+        {isConnected ? <AddressDropdown /> : <ConnectButton />}
+      </div>
     </nav>
   );
 };

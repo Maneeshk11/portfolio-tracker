@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 import { Poppins, Lora, Fira_Code } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib/providers/provider";
 import { getConfig } from "@/lib/configs/wagmi";
 import { headers } from "next/headers";
 import { cookieToInitialState } from "wagmi";
-
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
@@ -26,16 +24,6 @@ const firaCode = Fira_Code({
   display: "swap",
 });
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
-
 export const metadata: Metadata = {
   title: "Portfolio Tracker",
   description: "Portfolio Tracker",
@@ -52,7 +40,7 @@ export default async function RootLayout({
   );
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${poppins.variable} ${lora.variable} ${firaCode.variable} antialiased`}
       >

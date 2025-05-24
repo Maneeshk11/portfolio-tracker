@@ -5,6 +5,7 @@ import { getConfig } from "@/lib/configs/wagmi";
 import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../queryClient";
+import { ThemeProvider } from "./theme-provider";
 
 const Providers = (props: {
   children: React.ReactNode;
@@ -15,7 +16,14 @@ const Providers = (props: {
   return (
     <WagmiProvider config={config} initialState={props.initialState}>
       <QueryClientProvider client={queryClient}>
-        {props.children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {props.children}
+        </ThemeProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
