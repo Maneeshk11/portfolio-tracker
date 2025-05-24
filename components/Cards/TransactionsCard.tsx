@@ -1,5 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { ArrowDownRight, ArrowLeftRight, ArrowUpRight } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowLeftRight,
+  ArrowUpRight,
+  ExternalLink,
+  MoveHorizontal,
+} from "lucide-react";
 import {
   TableHead,
   TableRow,
@@ -11,6 +17,18 @@ import {
 import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { useAccount } from "wagmi";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import formatAddress from "@/lib/address/utils";
+import Link from "next/link";
+import { fromHex } from "viem";
+import { Separator } from "../ui/separator";
 const TransactionsCard = () => {
   const { portfolio } = usePortfolioContext();
   const { address } = useAccount();
@@ -58,51 +76,191 @@ const TransactionsCard = () => {
           </TableHeader>
           <TableBody>
             {portfolio.transactions.map((transaction, index) => (
-              <TableRow
-                key={index}
-                className={`border-b-0 ${
-                  index % 2 === 0
-                    ? "bg-primary/10 hover:bg-primary/20"
-                    : "bg-secondary/10 hover:bg-secondary/20"
-                }`}
-              >
-                <TableCell className="font-normal text-base ">
-                  {transaction.from === address?.toLowerCase() ? (
+              <Dialog key={index}>
+                <DialogTrigger asChild>
+                  <TableRow
+                    key={index}
+                    className={`border-b-0 cursor-pointer ${
+                      index % 2 === 0
+                        ? "bg-primary/10 hover:bg-primary/20"
+                        : "bg-secondary/10 hover:bg-secondary/20"
+                    }`}
+                  >
+                    <TableCell className="font-normal text-base ">
+                      {transaction.from === address?.toLowerCase() ? (
+                        <div className="flex items-center gap-2">
+                          <ArrowUpRight className="w-4 h-4 text-green-500" />
+                          <span>Sent</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <ArrowDownRight className="w-4 h-4 text-red-500" />
+                          <span>Received</span>
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-semibold flex items-center gap-2">
+                      <Image
+                        src={
+                          portfolio.assets.find(
+                            (asset) => asset.symbol === transaction.asset
+                          )?.image ?? ""
+                        }
+                        alt={transaction.asset ?? ""}
+                        width={20}
+                        height={20}
+                      />{" "}
+                      {transaction.asset}
+                    </TableCell>
+                    <TableCell className="font-semibold text-right">
+                      $
+                      {formatCurrency(
+                        Number(transaction.value) *
+                          (portfolio.assets.find(
+                            (asset) => asset.symbol === transaction.asset
+                          )?.price ?? 0)
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      {formatCurrency(Number(transaction.value))}{" "}
+                      {transaction.asset}
+                    </TableCell>
+                    <TableCell className="text-right font-semibold">
+                      {formatDate(
+                        transaction.metadata.blockTimestamp.toString()
+                      )}
+                    </TableCell>
+                  </TableRow>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Transaction Details</DialogTitle>
+                  </DialogHeader>
+                  <DialogDescription className="flex items-center gap-2">
                     <div className="flex items-center gap-2">
-                      <ArrowUpRight className="w-4 h-4 text-green-500" />
-                      <span>Sent</span>
+                      {transaction.from === address?.toLowerCase() ? (
+                        <ArrowUpRight className="w-4 h-4 text-green-500" />
+                      ) : (
+                        <ArrowDownRight className="w-4 h-4 text-red-500" />
+                      )}
+                      <span>
+                        {transaction.from === address?.toLowerCase() ? (
+                          <>
+                            Sent to{" "}
+                            <Link
+                              href={`https://etherscan.io/address/${transaction.to}`}
+                              target="_blank"
+                            >
+                              <span className="text-primary hover:underline">
+                                {formatAddress(transaction.to ?? "")}
+                              </span>
+                            </Link>
+                          </>
+                        ) : (
+                          <>
+                            Received from{" "}
+                            <Link
+                              href={`https://etherscan.io/address/${transaction.from}`}
+                              target="_blank"
+                            >
+                              <span className="text-primary hover:underline">
+                                {formatAddress(transaction.from ?? "")}
+                              </span>
+                            </Link>
+                          </>
+                        )}
+                      </span>
                     </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <ArrowDownRight className="w-4 h-4 text-red-500" />
-                      <span>Received</span>
+                  </DialogDescription>
+
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between w-full rounded-lg bg-primary/10 p-2">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={
+                            portfolio.assets.find(
+                              (asset) => asset.symbol === transaction.asset
+                            )?.image ?? ""
+                          }
+                          alt={transaction.asset ?? ""}
+                          width={20}
+                          height={20}
+                        />
+                        <span>{transaction.asset}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>
+                          {transaction.value} {transaction.asset}
+                        </span>
+                        <MoveHorizontal className="w-4 h-4" />
+                        <span>
+                          {" "}
+                          $
+                          {formatCurrency(
+                            Number(transaction.value) *
+                              (portfolio.assets.find(
+                                (asset) => asset.symbol === transaction.asset
+                              )?.price ?? 0)
+                          )}
+                        </span>
+                      </div>
                     </div>
-                  )}
-                </TableCell>
-                <TableCell className="font-semibold flex items-center gap-2">
-                  <Image
-                    src={
-                      portfolio.assets.find(
-                        (asset) => asset.symbol === transaction.asset
-                      )?.image ?? ""
-                    }
-                    alt={transaction.asset ?? ""}
-                    width={20}
-                    height={20}
-                  />{" "}
-                  {transaction.asset}
-                </TableCell>
-                <TableCell className="font-semibold text-right">
-                  ${formatCurrency(Number(transaction.value))}
-                </TableCell>
-                <TableCell className="text-right font-semibold">
-                  {formatCurrency(Number(transaction.value))}{" "}
-                  {transaction.asset}
-                </TableCell>
-                <TableCell className="text-right font-semibold">
-                  {formatDate(transaction.metadata.blockTimestamp.toString())}
-                </TableCell>
-              </TableRow>
+
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-2">Date</span>
+                        <span>
+                          {formatDate(
+                            transaction.metadata.blockTimestamp.toString()
+                          )}
+                        </span>
+                      </div>
+                      <Separator className="bg-primary/20" />
+
+                      <div className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-2">Hash</span>
+                        <Link
+                          href={`https://etherscan.io/tx/${transaction.hash}`}
+                          target="_blank"
+                          className="flex items-center gap-2"
+                        >
+                          <span className="text-primary hover:underline">
+                            {formatAddress(transaction.hash ?? "")}
+                          </span>
+                          <ExternalLink className="w-4 h-4" />
+                        </Link>
+                      </div>
+                      <Separator className="bg-primary/20" />
+
+                      <div className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-2">
+                          Category
+                        </span>
+                        <span>{transaction.category}</span>
+                      </div>
+                      <Separator className="bg-primary/20" />
+
+                      <div className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-2">Block</span>
+                        <Link
+                          href={`https://etherscan.io/block/${fromHex(
+                            transaction.blockNum as `0x${string}`,
+                            "bigint"
+                          )}`}
+                          target="_blank"
+                        >
+                          <span className="text-primary hover:underline">
+                            {fromHex(
+                              transaction.blockNum as `0x${string}`,
+                              "bigint"
+                            )}
+                          </span>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             ))}
           </TableBody>
         </Table>

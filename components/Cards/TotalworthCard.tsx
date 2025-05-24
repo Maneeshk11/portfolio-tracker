@@ -28,7 +28,7 @@ const TotalWorthCard = () => {
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
               <DollarSign className="w-4 h-4" /> Worth (USD)
             </span>
-            <span className="text-3xl font-semibold">
+            <span className="text-3xl font-medium">
               ${formatCurrency(portfolio.worth.usd)}
             </span>
           </div>
@@ -36,7 +36,7 @@ const TotalWorthCard = () => {
             <span className="text-sm font-medium text-muted-foreground flex items-center gap-1">
               <Coins className="w-4 h-4" /> Worth (ETH)
             </span>
-            <span className="text-3xl font-semibold">
+            <span className="text-3xl font-medium">
               {formatNumber(portfolio.worth.eth)} ETH
             </span>
           </div>
