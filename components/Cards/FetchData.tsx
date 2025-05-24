@@ -28,6 +28,7 @@ const FetchData = () => {
       });
     }
   }, [isRefetching, portfolio]);
+
   return null;
 };
 

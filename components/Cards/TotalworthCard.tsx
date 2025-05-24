@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { formatNumber } from "@/lib/utils";
-
+import { useAccount } from "wagmi";
 const TotalWorthCard = () => {
   const { portfolio, setIsRefetching, isRefetching } = usePortfolioContext();
+  const { address } = useAccount();
 
   // Format currency with proper formatting
   const formatCurrency = (value: number) => {
@@ -49,7 +50,7 @@ const TotalWorthCard = () => {
           onClick={() => {
             setIsRefetching(true);
           }}
-          disabled={isRefetching}
+          disabled={isRefetching || !address}
         >
           <RefreshCw className={`w-4 h-4 ${isRefetching && "animate-spin"}`} />
           {isRefetching ? "Syncing" : "Sync"}

@@ -8,11 +8,9 @@ import {
 import { Button } from "../ui/button";
 import formatAddress from "@/lib/address/utils";
 import { useAccount, useDisconnect } from "wagmi";
-import { useRouter } from "next/navigation";
 const AddressDropdown = () => {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
-  const router = useRouter();
 
   return (
     <DropdownMenu>
@@ -53,7 +51,6 @@ const AddressDropdown = () => {
         <DropdownMenuItem
           onClick={() => {
             disconnect();
-            router.refresh();
           }}
           className="cursor-pointer flex items-center justify-between"
         >

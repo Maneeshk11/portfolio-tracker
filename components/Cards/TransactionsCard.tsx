@@ -136,7 +136,10 @@ const TransactionsCard = () => {
                   <DialogHeader>
                     <DialogTitle>Transaction Details</DialogTitle>
                   </DialogHeader>
-                  <DialogDescription className="flex items-center gap-2">
+                  <DialogDescription
+                    className="flex items-center gap-2"
+                    asChild
+                  >
                     <div className="flex items-center gap-2">
                       {transaction.from === address?.toLowerCase() ? (
                         <ArrowUpRight className="w-4 h-4 text-green-500" />
