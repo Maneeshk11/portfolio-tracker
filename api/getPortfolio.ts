@@ -5,12 +5,21 @@ import { getBalance } from "wagmi/actions";
 import { getConfig } from "@/lib/configs/wagmi";
 import getTokenPrices from "@/api/token/getTokenPrices";
 import { getTransactions } from "@/api/transactions/getTransactions";
+import { Alchemy } from "alchemy-sdk";
 
-const getPortfolio = async (address: `0x${string}`) => {
+const getPortfolio = async (
+  address: `0x${string}`,
+  chainId: number,
+  alchemy: Alchemy | null
+) => {
+  if (!alchemy) {
+    throw new Error("Alchemy is not initialized");
+  }
   const assets: Asset[] = [];
 
   const nativeEth = await getBalance(getConfig(), {
     address,
+    chainId: chainId as 1 | 11155111,
   });
 
   assets.push({
@@ -22,7 +31,7 @@ const getPortfolio = async (address: `0x${string}`) => {
       "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880",
   });
 
-  const tokens = await getTokens(address);
+  const tokens = await getTokens(address, alchemy);
   assets.push(
     ...(tokens?.tokens.map((token) => ({
       address: token.contractAddress as `0x${string}`,
@@ -56,9 +65,7 @@ const getPortfolio = async (address: `0x${string}`) => {
     usd: totalWorthUSD,
   };
 
-  const transactions = await getTransactions(address);
-
-  console.log("txs: ", transactions);
+  const transactions = await getTransactions(address, alchemy);
 
   return { assets, totalWorth, transactions };
 };

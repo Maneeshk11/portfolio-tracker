@@ -31,7 +31,7 @@ import { fromHex } from "viem";
 import { Separator } from "../ui/separator";
 const TransactionsCard = () => {
   const { portfolio } = usePortfolioContext();
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
 
   // Format currency with 2 decimal places
   const formatCurrency = (value: number) => {
@@ -146,29 +146,41 @@ const TransactionsCard = () => {
                       ) : (
                         <ArrowDownRight className="w-4 h-4 text-red-500" />
                       )}
-                      <span>
+                      <span className="flex items-center gap-2">
                         {transaction.from === address?.toLowerCase() ? (
                           <>
-                            Sent to{" "}
+                            <span>Sent to</span>
                             <Link
-                              href={`https://etherscan.io/address/${transaction.to}`}
+                              href={`https://${
+                                chainId === 1
+                                  ? "etherscan.io"
+                                  : "sepolia.etherscan.io"
+                              }/address/${transaction.to}`}
                               target="_blank"
+                              className="flex items-center gap-2"
                             >
                               <span className="text-primary hover:underline">
                                 {formatAddress(transaction.to ?? "")}
                               </span>
+                              <ExternalLink className="w-4 h-4" />
                             </Link>
                           </>
                         ) : (
                           <>
-                            Received from{" "}
+                            <span>Received from</span>
                             <Link
-                              href={`https://etherscan.io/address/${transaction.from}`}
+                              href={`https://${
+                                chainId === 1
+                                  ? "etherscan.io"
+                                  : "sepolia.etherscan.io"
+                              }/address/${transaction.from}`}
                               target="_blank"
+                              className="flex items-center gap-2"
                             >
                               <span className="text-primary hover:underline">
                                 {formatAddress(transaction.from ?? "")}
                               </span>
+                              <ExternalLink className="w-4 h-4" />
                             </Link>
                           </>
                         )}
@@ -223,7 +235,11 @@ const TransactionsCard = () => {
                       <div className="flex items-center justify-between w-full">
                         <span className="flex items-center gap-2">Hash</span>
                         <Link
-                          href={`https://etherscan.io/tx/${transaction.hash}`}
+                          href={`https://${
+                            chainId === 1
+                              ? "etherscan.io"
+                              : "sepolia.etherscan.io"
+                          }/tx/${transaction.hash}`}
                           target="_blank"
                           className="flex items-center gap-2"
                         >
@@ -246,11 +262,16 @@ const TransactionsCard = () => {
                       <div className="flex items-center justify-between w-full">
                         <span className="flex items-center gap-2">Block</span>
                         <Link
-                          href={`https://etherscan.io/block/${fromHex(
+                          href={`https://${
+                            chainId === 1
+                              ? "etherscan.io"
+                              : "sepolia.etherscan.io"
+                          }/block/${fromHex(
                             transaction.blockNum as `0x${string}`,
                             "bigint"
                           )}`}
                           target="_blank"
+                          className="flex items-center gap-2"
                         >
                           <span className="text-primary hover:underline">
                             {fromHex(
@@ -258,6 +279,7 @@ const TransactionsCard = () => {
                               "bigint"
                             )}
                           </span>
+                          <ExternalLink className="w-4 h-4" />
                         </Link>
                       </div>
                     </div>

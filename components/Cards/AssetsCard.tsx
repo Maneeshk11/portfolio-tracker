@@ -64,13 +64,15 @@ const AssetsCard = () => {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="relative h-8 w-8 overflow-hidden rounded-full">
-                          <Image
-                            src={asset.image || ""}
-                            alt={asset.name || ""}
-                            fill
-                            sizes="32px"
-                            className="object-cover"
-                          />
+                          {asset.image && (
+                            <Image
+                              src={asset.image}
+                              alt={asset.name || ""}
+                              fill
+                              sizes="32px"
+                              className="object-cover"
+                            />
+                          )}
                         </div>
 
                         <div className="flex flex-col">

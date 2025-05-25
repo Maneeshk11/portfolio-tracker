@@ -5,9 +5,11 @@ import { useAccount } from "wagmi";
 import ConnectButton from "./ConnectButton";
 import AddressDropdown from "./AddressDropdown";
 import ThemeToggle from "./ThemeToggle";
+import NetworkSwitcher from "./NetworkSwitcher";
+// import NetworkSwitcher from "./NetworkSwitcher";
 
 const Nav = () => {
-  const { isConnected } = useAccount();
+  const { isConnected, address, chain } = useAccount();
 
   return (
     <nav className="flex justify-between items-center">
@@ -19,7 +21,12 @@ const Nav = () => {
       </Link>
       <div className="flex items-center gap-4">
         <ThemeToggle />
-        {isConnected ? <AddressDropdown /> : <ConnectButton />}
+        {isConnected && <NetworkSwitcher chainId={chain?.id ?? 0} />}
+        {isConnected ? (
+          <AddressDropdown address={address} />
+        ) : (
+          <ConnectButton />
+        )}
       </div>
     </nav>
   );

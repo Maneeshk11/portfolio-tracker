@@ -7,9 +7,13 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import formatAddress from "@/lib/address/utils";
-import { useAccount, useDisconnect } from "wagmi";
-const AddressDropdown = () => {
-  const { address } = useAccount();
+import { useDisconnect } from "wagmi";
+
+interface AddressDropdownProps {
+  address: `0x${string}` | undefined;
+}
+
+const AddressDropdown = ({ address }: AddressDropdownProps) => {
   const { disconnect } = useDisconnect();
 
   return (

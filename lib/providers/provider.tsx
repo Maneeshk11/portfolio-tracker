@@ -6,6 +6,7 @@ import { useState } from "react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../queryClient";
 import { ThemeProvider } from "./theme-provider";
+import { AlchemyProvider } from "./alchemy";
 
 const Providers = (props: {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ const Providers = (props: {
           enableSystem
           disableTransitionOnChange
         >
-          {props.children}
+          <AlchemyProvider>{props.children}</AlchemyProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </WagmiProvider>

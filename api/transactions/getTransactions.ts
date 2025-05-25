@@ -1,7 +1,10 @@
-import alchemy from "@/lib/configs/alchemy";
+import { Alchemy } from "alchemy-sdk";
 import { AssetTransfersCategory, SortingOrder } from "alchemy-sdk";
 
-export const getTransactions = async (address: `0x${string}`) => {
+export const getTransactions = async (
+  address: `0x${string}`,
+  alchemy: Alchemy
+) => {
   const transactionsTo = await alchemy.core.getAssetTransfers({
     toAddress: address,
     withMetadata: true,
