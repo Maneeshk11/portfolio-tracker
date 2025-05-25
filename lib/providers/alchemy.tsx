@@ -48,7 +48,6 @@ export const AlchemyProvider = ({ children }: AlchemyProviderProps) => {
     };
     const alchemyNew = new Alchemy(config);
     setAlchemy(alchemyNew);
-    console.log("alchemy: ", alchemyNew);
   }, [chainId]);
 
   return (
