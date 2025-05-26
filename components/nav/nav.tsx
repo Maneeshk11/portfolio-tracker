@@ -6,19 +6,23 @@ import ConnectButton from "./ConnectButton";
 import AddressDropdown from "./AddressDropdown";
 import ThemeToggle from "./ThemeToggle";
 import NetworkSwitcher from "./NetworkSwitcher";
-// import NetworkSwitcher from "./NetworkSwitcher";
-
+import ChatSheet from "./ChatSheet";
+import { Separator } from "../ui/separator";
 const Nav = () => {
   const { isConnected, address, chain } = useAccount();
 
   return (
     <nav className="flex justify-between items-center">
-      <Link
-        href="/"
-        className="text-xl font-medium font-mono text-secondary-foreground"
-      >
-        Portfolio Tracker
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link
+          href="/"
+          className="text-xl font-medium font-mono text-secondary-foreground"
+        >
+          Portfolio Tracker
+        </Link>
+        <Separator orientation="vertical" className="h-4" />
+        <ChatSheet />
+      </div>
       <div className="flex items-center gap-4">
         <ThemeToggle />
         {isConnected && <NetworkSwitcher chainId={chain?.id ?? 0} />}
