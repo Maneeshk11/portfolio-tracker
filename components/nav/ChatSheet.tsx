@@ -14,9 +14,9 @@ import {
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { Textarea } from "../ui/textarea";
-import { useAccount } from "wagmi";
 import { Separator } from "../ui/separator";
 import { useChat } from "@ai-sdk/react";
+import { useAccount } from "wagmi";
 
 // Define the form data type explicitly without Zod
 type FormData = {
@@ -32,6 +32,19 @@ const ChatSheet = () => {
 
   const { address, chainId } = useAccount();
   const { messages, input, handleInputChange, handleSubmit } = useChat();
+
+  // async function handleSubmit(data: FormData) {
+  //   try {
+  //     const result = await chatAgent(
+  //       data.message,
+  //       address as string,
+  //       chainId as number
+  //     );
+  //     console.log(result);
+  //   } catch (error) {
+  //     console.error("error while getting tokens: ", error);
+  //   }
+  // }
 
   return (
     <Sheet>
@@ -86,14 +99,14 @@ const ChatSheet = () => {
         <SheetFooter className="mb-4 w-full">
           <Form {...form}>
             <form
-              onSubmit={(event) =>
+              onSubmit={(event) => {
                 handleSubmit(event, {
                   body: {
-                    address: address,
-                    chainId: chainId,
+                    address: address as string,
+                    chainId: chainId as number,
                   },
-                })
-              }
+                });
+              }}
               className="flex gap-2 w-full items-center"
             >
               <FormField
