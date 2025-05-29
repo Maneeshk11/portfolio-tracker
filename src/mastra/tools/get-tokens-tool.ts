@@ -2,24 +2,22 @@ import { createTool } from "@mastra/core/tools";
 import { AlchemySettings } from "alchemy-sdk";
 import { Alchemy } from "alchemy-sdk";
 import { Network } from "alchemy-sdk";
+import { formatUnits } from "viem";
 import { z } from "zod";
+import { Asset } from "@/lib/types";
 
 export const getTokensTool = createTool({
   id: "get-tokens",
   description: "Get tokens for a wallet address and chain id",
-  inputSchema: z.object({
-    walletAddress: z.string().describe("The wallet address to get tokens for"),
-    chainId: z.string().describe("The chainId to get tokens for"),
-  }),
   outputSchema: z.object({
-    tokens: z.array(z.string()).describe("The tokens for the wallet address"),
+    tokens: z.array(z.custom<Asset>()),
   }),
-  execute: async ({ context }) => {
+  execute: async ({ runtimeContext }) => {
     const tokens = await getTokens(
-      context.walletAddress,
-      Number(context.chainId)
+      runtimeContext.get("address"),
+      runtimeContext.get("chainId")
     );
-    return { tokens };
+    return { tokens: tokens as unknown as Asset[] };
   },
 });
 
@@ -57,7 +55,19 @@ const getTokens = async (walletAddress: string, chainId: number) => {
     const alchemy = new Alchemy(config);
     const tokens = await alchemy.core.getTokensForOwner(walletAddress);
 
-    return tokens.tokens.map((token) => token.name) as string[];
+    return tokens.tokens.map(
+      (token) =>
+        ({
+          address: token.contractAddress as `0x${string}`,
+          name: token.name,
+          symbol: token.symbol,
+          amount: formatUnits(
+            BigInt(token.rawBalance ?? 0),
+            Number(token.decimals)
+          ),
+          image: token.logo,
+        } as Asset)
+    ) as Asset[];
   } catch (error) {
     console.error("Error in getTokens:", error);
     return [];

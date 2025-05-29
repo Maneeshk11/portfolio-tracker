@@ -24,27 +24,20 @@ type FormData = {
 };
 
 const ChatSheet = () => {
+  const { address, chainId } = useAccount();
+
   const form = useForm<FormData>({
     defaultValues: {
       message: "",
     },
   });
 
-  const { address, chainId } = useAccount();
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
-
-  // async function handleSubmit(data: FormData) {
-  //   try {
-  //     const result = await chatAgent(
-  //       data.message,
-  //       address as string,
-  //       chainId as number
-  //     );
-  //     console.log(result);
-  //   } catch (error) {
-  //     console.error("error while getting tokens: ", error);
-  //   }
-  // }
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    body: {
+      address: address,
+      chainId: chainId,
+    },
+  });
 
   return (
     <Sheet>
@@ -89,7 +82,7 @@ const ChatSheet = () => {
                       key={i}
                       className="text-sm whitespace-normal break-words"
                     >
-                      {part.text}
+                      {part.text ? part.text : "..."}
                     </span>
                   )
               )}
@@ -102,8 +95,8 @@ const ChatSheet = () => {
               onSubmit={(event) => {
                 handleSubmit(event, {
                   body: {
-                    address: address as string,
-                    chainId: chainId as number,
+                    address: address,
+                    chainId: chainId,
                   },
                 });
               }}

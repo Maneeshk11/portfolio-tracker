@@ -15,4 +15,19 @@ export const mastra = new Mastra({
     name: "Mastra",
     level: "info",
   }),
+  server: {
+    middleware: [
+      async (c, next) => {
+        const { address, chainId } = await c.req.json();
+        const runtimeContext = c.get("runtimeContext");
+        if (!runtimeContext) {
+          throw new Error("Runtime context not found");
+        }
+
+        runtimeContext.set("address", address);
+        runtimeContext.set("chainId", chainId);
+        await next();
+      },
+    ],
+  },
 });
