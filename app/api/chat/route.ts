@@ -16,6 +16,7 @@ export async function POST(req: Request) {
 
   try {
     const result = await agent.stream(messages, {
+      maxSteps: 10,
       runtimeContext,
     });
     return result.toDataStreamResponse();

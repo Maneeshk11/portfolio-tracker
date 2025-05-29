@@ -5,6 +5,7 @@ import { LibSQLStore } from "@mastra/libsql";
 import { getTokensTool } from "../tools/get-tokens-tool";
 import { getNativeTokenTool } from "../tools/get-native-token-tool";
 import { getWalletTool } from "../tools/get-wallet-tool";
+import { getTokenPricesTool } from "../tools/get-token-prices-tool";
 
 export const cryptoAgent = new Agent({
   name: "Crypto Agent",
@@ -23,7 +24,12 @@ export const cryptoAgent = new Agent({
     - If the user asks for a wallet address or chainId, use the runtime context to get the information
   `,
   model: openai("gpt-4o-mini"),
-  tools: { getTokensTool, getNativeTokenTool, getWalletTool },
+  tools: {
+    getTokensTool,
+    getNativeTokenTool,
+    getWalletTool,
+    getTokenPricesTool,
+  },
   memory: new Memory({
     storage: new LibSQLStore({
       url: "file:../mastra.db", // path is relative to the .mastra/output directory
