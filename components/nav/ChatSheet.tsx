@@ -17,6 +17,7 @@ import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
 import { useChat } from "@ai-sdk/react";
 import { useAccount } from "wagmi";
+import ReactMarkdown from "react-markdown";
 
 // Define the form data type explicitly without Zod
 type FormData = {
@@ -69,7 +70,7 @@ const ChatSheet = () => {
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`max-w-4/5 rounded-xl p-2 ${
+              className={`max-w-4/5 rounded-xl px-2 prose prose-sm ${
                 message.role === "user"
                   ? "ml-auto bg-primary/30 border border-primary/50 text-black"
                   : "mr-auto bg-secondary/30 border border-secondary/50 text-black"
@@ -78,12 +79,12 @@ const ChatSheet = () => {
               {message.parts.map(
                 (part, i) =>
                   part.type === "text" && (
-                    <span
+                    <div
                       key={i}
                       className="text-sm whitespace-normal break-words"
                     >
-                      {part.text ? part.text : "..."}
-                    </span>
+                      <ReactMarkdown>{part.text || "..."}</ReactMarkdown>
+                    </div>
                   )
               )}
             </div>

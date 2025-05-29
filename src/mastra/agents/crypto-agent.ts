@@ -14,6 +14,7 @@ export const cryptoAgent = new Agent({
     You have the runtime context of the user's wallet address and chainId.
 
     Your primary function is to give users information and insights about their crypto wallet and their assets. When responding:
+    - Use markdown to format your responses. Use code blocks for code and lists for lists. And image formatting for images.
     - If user asks generals questions like "hi", "hello", "how are you", and other small talk, respond with a friendly and concise message.
     - Use tools only when the user asks for specific information
     - Respond to general questions about crypto or other things and don't call the tools unless the user asks for specific information.

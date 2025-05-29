@@ -1,7 +1,6 @@
 import { createTool } from "@mastra/core/tools";
-import { AlchemySettings } from "alchemy-sdk";
 import { Alchemy } from "alchemy-sdk";
-import { Network } from "alchemy-sdk";
+import { Network, AlchemySettings } from "alchemy-sdk";
 import { formatUnits } from "viem";
 import { z } from "zod";
 import { Asset } from "@/lib/types";
