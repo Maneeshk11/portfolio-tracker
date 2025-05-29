@@ -34,6 +34,7 @@ const ChatSheet = () => {
   });
 
   const { messages, input, handleInputChange, handleSubmit } = useChat({
+    api: "/api/chat",
     body: {
       address: address,
       chainId: chainId,
