@@ -5,6 +5,7 @@ import Providers from "@/lib/providers/provider";
 import { getConfig } from "@/lib/configs/wagmi";
 import { headers } from "next/headers";
 import { cookieToInitialState } from "wagmi";
+import Nav from "@/components/nav/nav";
 const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
@@ -44,7 +45,12 @@ export default async function RootLayout({
       <body
         className={`${poppins.variable} ${lora.variable} ${firaCode.variable} antialiased`}
       >
-        <Providers initialState={initialState}>{children}</Providers>
+        <Providers initialState={initialState}>
+          <main className="flex flex-col max-w-7xl mx-auto h-screen px-4 py-6 gap-6">
+            <Nav />
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );
