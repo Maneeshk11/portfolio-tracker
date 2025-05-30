@@ -11,8 +11,8 @@ import { Select, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const SwapPage = () => {
   return (
-    <div className="flex justify-center">
-      <Card className="w-lg mt-20">
+    <div className="flex justify-center items-center">
+      <Card className="w-lg">
         <CardHeader>
           <CardTitle>Swap</CardTitle>
         </CardHeader>
