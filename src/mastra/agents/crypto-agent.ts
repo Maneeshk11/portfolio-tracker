@@ -32,7 +32,10 @@ export const cryptoAgent = new Agent({
   },
   memory: new Memory({
     storage: new LibSQLStore({
-      url: "file:../mastra.db", // path is relative to the .mastra/output directory
+      url:
+        process.env.NODE_ENV === "production"
+          ? ":memory:"
+          : "file:../mastra.db",
     }),
   }),
 });
