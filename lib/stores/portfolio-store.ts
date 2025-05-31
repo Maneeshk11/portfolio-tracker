@@ -9,7 +9,6 @@ export type PortfolioState = {
 };
 
 export type PortfolioActions = {
-  //   setPortfolio: (portfolio: PortfolioState) => void;
   setWorth: (worth: Worth) => void;
   setAssets: (assets: Asset[]) => void;
   setTransactions: (transactions: Transaction[]) => void;

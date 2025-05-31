@@ -10,6 +10,7 @@ import { useSwitchChain } from "wagmi";
 import { Button } from "../ui/button";
 import { Repeat2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
+import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
 
 interface NetworkSwitcherProps {
   chainId: number;
@@ -20,6 +21,7 @@ const NetworkSwitcher = ({ chainId }: NetworkSwitcherProps) => {
   const { setChainId } = useAlchemy();
   const [value, setValue] = useState(chainId.toString());
   const [open, setOpen] = useState(false);
+  const { setIsRefetching } = usePortfolioStore((state) => state);
 
   const blockCloseRef = useRef(false);
 
@@ -34,6 +36,7 @@ const NetworkSwitcher = ({ chainId }: NetworkSwitcherProps) => {
     setChainId(newChain);
     switchChain({ chainId: newChain as 1 | 11155111 });
     setValue(newChain.toString());
+    setIsRefetching(true);
   };
 
   const handleValueChange = (newValue: string) => {

@@ -100,16 +100,20 @@ const TransactionsCard = () => {
                       )}
                     </TableCell>
                     <TableCell className="font-semibold flex items-center gap-2">
-                      <Image
-                        src={
-                          assets.find(
-                            (asset) => asset.symbol === transaction.asset
-                          )?.image ?? ""
-                        }
-                        alt={transaction.asset ?? ""}
-                        width={20}
-                        height={20}
-                      />{" "}
+                      {(() => {
+                        const assetImage = assets.find(
+                          (asset) => asset.symbol === transaction.asset
+                        )?.image;
+                        if (!assetImage) return null;
+                        return (
+                          <Image
+                            src={assetImage}
+                            alt={transaction.asset ?? ""}
+                            width={20}
+                            height={20}
+                          />
+                        );
+                      })()}{" "}
                       {transaction.asset}
                     </TableCell>
                     <TableCell className="font-semibold text-right">
@@ -191,16 +195,20 @@ const TransactionsCard = () => {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between w-full rounded-lg bg-primary/10 p-2">
                       <div className="flex items-center gap-2">
-                        <Image
-                          src={
-                            assets.find(
-                              (asset) => asset.symbol === transaction.asset
-                            )?.image ?? ""
-                          }
-                          alt={transaction.asset ?? ""}
-                          width={20}
-                          height={20}
-                        />
+                        {(() => {
+                          const assetImage = assets.find(
+                            (asset) => asset.symbol === transaction.asset
+                          )?.image;
+                          if (!assetImage) return null;
+                          return (
+                            <Image
+                              src={assetImage}
+                              alt={transaction.asset ?? ""}
+                              width={20}
+                              height={20}
+                            />
+                          );
+                        })()}
                         <span>{transaction.asset}</span>
                       </div>
                       <div className="flex items-center gap-2">
