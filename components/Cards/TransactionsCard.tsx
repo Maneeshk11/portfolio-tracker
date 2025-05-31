@@ -14,7 +14,6 @@ import {
   TableBody,
   TableCell,
 } from "../ui/table";
-import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { useAccount } from "wagmi";
 import Image from "next/image";
 import {
@@ -29,8 +28,9 @@ import formatAddress from "@/lib/address/utils";
 import Link from "next/link";
 import { fromHex } from "viem";
 import { Separator } from "../ui/separator";
+import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
 const TransactionsCard = () => {
-  const { portfolio } = usePortfolioContext();
+  const { transactions, assets } = usePortfolioStore((state) => state);
   const { address, chainId } = useAccount();
 
   // Format currency with 2 decimal places
@@ -75,7 +75,7 @@ const TransactionsCard = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {portfolio.transactions.map((transaction, index) => (
+            {transactions.map((transaction, index) => (
               <Dialog key={index}>
                 <DialogTrigger asChild>
                   <TableRow
@@ -102,7 +102,7 @@ const TransactionsCard = () => {
                     <TableCell className="font-semibold flex items-center gap-2">
                       <Image
                         src={
-                          portfolio.assets.find(
+                          assets.find(
                             (asset) => asset.symbol === transaction.asset
                           )?.image ?? ""
                         }
@@ -116,7 +116,7 @@ const TransactionsCard = () => {
                       $
                       {formatCurrency(
                         Number(transaction.value) *
-                          (portfolio.assets.find(
+                          (assets.find(
                             (asset) => asset.symbol === transaction.asset
                           )?.price ?? 0)
                       )}
@@ -193,7 +193,7 @@ const TransactionsCard = () => {
                       <div className="flex items-center gap-2">
                         <Image
                           src={
-                            portfolio.assets.find(
+                            assets.find(
                               (asset) => asset.symbol === transaction.asset
                             )?.image ?? ""
                           }
@@ -213,7 +213,7 @@ const TransactionsCard = () => {
                           $
                           {formatCurrency(
                             Number(transaction.value) *
-                              (portfolio.assets.find(
+                              (assets.find(
                                 (asset) => asset.symbol === transaction.asset
                               )?.price ?? 0)
                           )}
