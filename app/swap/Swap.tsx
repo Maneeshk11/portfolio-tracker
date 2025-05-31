@@ -15,7 +15,7 @@ import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 const Swap = () => {
   const { portfolio } = usePortfolioContext();
 
-  console.log(portfolio.assets);
+  console.log(portfolio);
 
   return (
     <Card className="w-lg">
@@ -23,7 +23,7 @@ const Swap = () => {
         <CardTitle>Swap</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2 border border-primary/50 rounded p-4">
+        <div className="flex flex-col gap-2 border rounded p-4 shadow-2xl shadow-primary/50 dark:shadow-primary/50">
           <span className="text-sm font-medium">Send</span>
           <div className="flex gap-2 items-center">
             <Input
@@ -44,7 +44,7 @@ const Swap = () => {
             </Select>
           </div>
         </div>
-        <div className="flex flex-col gap-2 border border-primary/50 rounded p-4 ">
+        <div className="flex flex-col gap-2 border rounded p-4  shadow-2xl shadow-primary/50 dark:shadow-primary/50">
           <span className="text-sm">Receive</span>
           <div className="flex gap-2 items-center">
             <Input
