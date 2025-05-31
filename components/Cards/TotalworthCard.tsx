@@ -1,11 +1,13 @@
 import { Bitcoin, Coins, DollarSign, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import { formatNumber } from "@/lib/utils";
 import { useAccount } from "wagmi";
+import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
 const TotalWorthCard = () => {
-  const { portfolio, setIsRefetching, isRefetching } = usePortfolioContext();
+  const { worth, setIsRefetching, isRefetching } = usePortfolioStore(
+    (state) => state
+  );
   const { address } = useAccount();
 
   // Format currency with proper formatting
@@ -30,7 +32,7 @@ const TotalWorthCard = () => {
               <DollarSign className="w-4 h-4" /> Worth (USD)
             </span>
             <span className="text-3xl font-medium">
-              ${formatCurrency(portfolio.worth.usd)}
+              ${formatCurrency(worth.usd)}
             </span>
           </div>
           <div className="flex flex-col space-y-2">
@@ -38,7 +40,7 @@ const TotalWorthCard = () => {
               <Coins className="w-4 h-4" /> Worth (ETH)
             </span>
             <span className="text-3xl font-medium">
-              {formatNumber(portfolio.worth.eth)} ETH
+              {formatNumber(worth.eth)} ETH
             </span>
           </div>
         </div>

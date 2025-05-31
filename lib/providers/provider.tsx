@@ -7,6 +7,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "../queryClient";
 import { ThemeProvider } from "./theme-provider";
 import { AlchemyProvider } from "./alchemy";
+import { PortfolioStoreProvider } from "./portfolio-store-provider";
 
 const Providers = (props: {
   children: React.ReactNode;
@@ -15,18 +16,20 @@ const Providers = (props: {
   const [config] = useState(() => getConfig());
 
   return (
-    <WagmiProvider config={config} initialState={props.initialState}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AlchemyProvider>{props.children}</AlchemyProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <PortfolioStoreProvider>
+      <WagmiProvider config={config} initialState={props.initialState}>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AlchemyProvider>{props.children}</AlchemyProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </PortfolioStoreProvider>
   );
 };
 

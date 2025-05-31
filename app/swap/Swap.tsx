@@ -45,7 +45,7 @@ const Swap = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2 border rounded p-4  shadow-2xl shadow-primary/50 dark:shadow-primary/50">
-          <span className="text-sm">Receive</span>
+          <span className="text-sm font-medium">Receive</span>
           <div className="flex gap-2 items-center">
             <Input
               className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl"

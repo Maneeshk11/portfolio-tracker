@@ -8,12 +8,12 @@ import {
   TableCell,
   TableBody,
 } from "../ui/table";
-import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
 import Image from "next/image";
 import { cn, formatNumber } from "@/lib/utils";
+import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
 
 const AssetsCard = () => {
-  const { portfolio } = usePortfolioContext();
+  const { assets } = usePortfolioStore((state) => state);
 
   return (
     <Card>
@@ -36,7 +36,7 @@ const AssetsCard = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {portfolio.assets.length === 0 ? (
+            {assets.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={5}
@@ -46,7 +46,7 @@ const AssetsCard = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              portfolio.assets.map((asset, index) => {
+              assets.map((asset, index) => {
                 // Mock data for 24h change - ideally this should come from the asset data
                 // This is just a placeholder until real data is available
                 const priceChange = Math.random() * 10 - 5; // Random value between -5 and 5
@@ -66,7 +66,7 @@ const AssetsCard = () => {
                         <div className="relative h-8 w-8 overflow-hidden rounded-full">
                           {asset.image && (
                             <Image
-                              src={asset.image}
+                              src={asset.image ?? null}
                               alt={asset.name || ""}
                               fill
                               sizes="32px"
