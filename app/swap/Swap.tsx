@@ -32,7 +32,7 @@ const Swap = () => {
               placeholder="0"
             />
             <Select>
-              <SelectTrigger className="w-44">
+              <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
                 <SelectValue placeholder="Select a token" />
               </SelectTrigger>
               <SelectContent>
@@ -65,7 +65,7 @@ const Swap = () => {
               placeholder="0"
             />
             <Select>
-              <SelectTrigger className="w-44">
+              <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
                 <SelectValue placeholder="Select a token" />
               </SelectTrigger>
               <SelectContent>
@@ -83,7 +83,7 @@ const Swap = () => {
                         height={20}
                       />
                     )}
-                    <span>{asset.symbol}</span>
+                    <span className="font-medium">{asset.symbol}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -92,7 +92,9 @@ const Swap = () => {
         </div>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button className="w-24  cursor-pointer">Swap</Button>
+        <Button className="w-24  cursor-pointer" disabled={true}>
+          Swap
+        </Button>
       </CardFooter>
     </Card>
   );
