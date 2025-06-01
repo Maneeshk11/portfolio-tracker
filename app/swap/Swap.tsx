@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   CardContent,
@@ -10,12 +12,11 @@ import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import { SelectTrigger } from "@/components/ui/select";
 import { SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { usePortfolioContext } from "@/lib/contexts/usePortfolioState";
+import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
+import Image from "next/image";
 
 const Swap = () => {
-  const { portfolio } = usePortfolioContext();
-
-  console.log(portfolio);
+  const { assets } = usePortfolioStore((state) => state);
 
   return (
     <Card className="w-lg">
@@ -31,13 +32,25 @@ const Swap = () => {
               placeholder="0"
             />
             <Select>
-              <SelectTrigger>
+              <SelectTrigger className="w-44">
                 <SelectValue placeholder="Select a token" />
               </SelectTrigger>
               <SelectContent>
-                {portfolio.assets.map((asset) => (
-                  <SelectItem key={asset.address} value={asset.address}>
-                    {asset.symbol}
+                {assets.map((asset) => (
+                  <SelectItem
+                    key={asset.address}
+                    value={asset.address}
+                    className="flex items-center gap-2"
+                  >
+                    {asset.image && (
+                      <Image
+                        src={asset.image ?? ""}
+                        alt={asset.symbol ?? ""}
+                        width={20}
+                        height={20}
+                      />
+                    )}
+                    <span>{asset.symbol}</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -52,9 +65,28 @@ const Swap = () => {
               placeholder="0"
             />
             <Select>
-              <SelectTrigger>
+              <SelectTrigger className="w-44">
                 <SelectValue placeholder="Select a token" />
               </SelectTrigger>
+              <SelectContent>
+                {assets.map((asset) => (
+                  <SelectItem
+                    key={asset.address}
+                    value={asset.address}
+                    className="flex items-center gap-2"
+                  >
+                    {asset.image && (
+                      <Image
+                        src={asset.image ?? ""}
+                        alt={asset.symbol ?? ""}
+                        width={20}
+                        height={20}
+                      />
+                    )}
+                    <span>{asset.symbol}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
             </Select>
           </div>
         </div>
