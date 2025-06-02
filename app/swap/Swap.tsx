@@ -28,8 +28,9 @@ const Swap = () => {
           <span className="text-sm font-medium">Send</span>
           <div className="flex gap-2 items-center">
             <Input
-              className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl "
+              className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="0"
+              type="number"
             />
             <Select>
               <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
@@ -61,8 +62,9 @@ const Swap = () => {
           <span className="text-sm font-medium">Receive</span>
           <div className="flex gap-2 items-center">
             <Input
-              className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl"
+              className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
               placeholder="0"
+              type="number"
             />
             <Select>
               <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">

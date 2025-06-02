@@ -1,5 +1,4 @@
 import getPortfolio from "@/api/getPortfolio";
-import { useAlchemy } from "@/lib/providers/alchemy";
 import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -13,11 +12,9 @@ const FetchData = () => {
     setIsRefetching,
     isRefetching,
   } = usePortfolioStore((state) => state);
-  const { alchemy } = useAlchemy();
   const { data: portfolio, refetch } = useQuery({
     queryKey: ["portfolio", address],
-    queryFn: () =>
-      getPortfolio(address as `0x${string}`, Number(chainId), alchemy),
+    queryFn: () => getPortfolio(address as `0x${string}`, Number(chainId)),
     enabled: !!address,
   });
 

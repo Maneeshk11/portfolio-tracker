@@ -5,16 +5,27 @@ import { getBalance } from "wagmi/actions";
 import { getConfig } from "@/lib/configs/wagmi";
 import getTokenPrices from "@/api/token/getTokenPrices";
 import { getTransactions } from "@/api/transactions/getTransactions";
-import { Alchemy } from "alchemy-sdk";
+import { Alchemy, Network } from "alchemy-sdk";
 
-const getPortfolio = async (
-  address: `0x${string}`,
-  chainId: number,
-  alchemy: Alchemy | null
-) => {
+function getNetwork(chainId: number) {
+  switch (chainId) {
+    case 1:
+      return Network.ETH_MAINNET;
+    case 11155111:
+      return Network.ETH_SEPOLIA;
+  }
+}
+
+const getPortfolio = async (address: `0x${string}`, chainId: number) => {
+  const alchemy = new Alchemy({
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
+    network: getNetwork(chainId),
+  });
+
   if (!alchemy) {
     throw new Error("Alchemy is not initialized");
   }
+
   const assets: Asset[] = [];
 
   const nativeEth = await getBalance(getConfig(), {
