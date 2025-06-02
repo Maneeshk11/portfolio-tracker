@@ -1,5 +1,9 @@
 import { createStore } from "zustand/vanilla";
+import { persist, createJSONStorage } from "zustand/middleware";
+
 import { Transaction, Worth, Asset } from "../types";
+import { queryClient } from "../queryClient";
+import getPortfolio from "@/api/getPortfolio";
 
 export type PortfolioState = {
   worth: Worth;
@@ -13,6 +17,7 @@ export type PortfolioActions = {
   setAssets: (assets: Asset[]) => void;
   setTransactions: (transactions: Transaction[]) => void;
   setIsRefetching: (isRefetching: boolean) => void;
+  refetch: (address: `0x${string}`, chainId: number) => Promise<void>;
 };
 
 export type PortfolioStore = PortfolioState & PortfolioActions;
@@ -27,11 +32,32 @@ export const defaultInitState: PortfolioState = {
 export const createPortfolioStore = (
   initState: PortfolioState = defaultInitState
 ) => {
-  return createStore<PortfolioStore>()((set) => ({
-    ...initState,
-    setWorth: (worth: Worth) => set({ worth }),
-    setAssets: (assets: Asset[]) => set({ assets }),
-    setTransactions: (transactions: Transaction[]) => set({ transactions }),
-    setIsRefetching: (isRefetching: boolean) => set({ isRefetching }),
-  }));
+  return createStore<PortfolioStore>()(
+    persist(
+      (set) => ({
+        ...initState,
+        setWorth: (worth: Worth) => set({ worth }),
+        setAssets: (assets: Asset[]) => set({ assets }),
+        setTransactions: (transactions: Transaction[]) => set({ transactions }),
+        setIsRefetching: (isRefetching: boolean) => set({ isRefetching }),
+        refetch: async (address: `0x${string}`, chainId: number) => {
+          const data = await queryClient.fetchQuery({
+            queryKey: ["portfolio", address],
+            queryFn: () =>
+              getPortfolio(address as `0x${string}`, Number(chainId)),
+          });
+          if (!data) return;
+          set({
+            worth: data.totalWorth,
+            assets: data.assets,
+            transactions: data.transactions,
+          });
+        },
+      }),
+      {
+        name: "portfolio",
+        storage: createJSONStorage(() => localStorage),
+      }
+    )
+  );
 };

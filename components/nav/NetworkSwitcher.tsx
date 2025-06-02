@@ -1,4 +1,3 @@
-import { useAlchemy } from "@/lib/providers/alchemy";
 import {
   Select,
   SelectTrigger,
@@ -6,7 +5,7 @@ import {
   SelectItem,
   SelectValue,
 } from "../ui/select";
-import { useSwitchChain } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { Button } from "../ui/button";
 import { Repeat2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
@@ -18,10 +17,10 @@ interface NetworkSwitcherProps {
 
 const NetworkSwitcher = ({ chainId }: NetworkSwitcherProps) => {
   const { switchChain, chains } = useSwitchChain();
-  const { setChainId } = useAlchemy();
   const [value, setValue] = useState(chainId.toString());
   const [open, setOpen] = useState(false);
-  const { setIsRefetching } = usePortfolioStore((state) => state);
+  const { setIsRefetching, refetch } = usePortfolioStore((state) => state);
+  const { address } = useAccount();
 
   const blockCloseRef = useRef(false);
 
@@ -29,14 +28,15 @@ const NetworkSwitcher = ({ chainId }: NetworkSwitcherProps) => {
     setValue(chainId.toString());
   }, [chainId]);
 
-  const chainSwitch = (newChain: number) => {
+  const chainSwitch = async (newChain: number) => {
     setOpen(false);
 
     if (newChain === chainId) return;
-    setChainId(newChain);
     switchChain({ chainId: newChain as 1 | 11155111 });
     setValue(newChain.toString());
     setIsRefetching(true);
+    await refetch(address as `0x${string}`, Number(value));
+    setIsRefetching(false);
   };
 
   const handleValueChange = (newValue: string) => {

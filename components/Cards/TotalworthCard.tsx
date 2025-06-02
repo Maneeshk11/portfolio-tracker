@@ -5,10 +5,10 @@ import { formatNumber } from "@/lib/utils";
 import { useAccount } from "wagmi";
 import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
 const TotalWorthCard = () => {
-  const { worth, setIsRefetching, isRefetching } = usePortfolioStore(
+  const { worth, setIsRefetching, isRefetching, refetch } = usePortfolioStore(
     (state) => state
   );
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
 
   // Format currency with proper formatting
   const formatCurrency = (value: number) => {
@@ -49,8 +49,10 @@ const TotalWorthCard = () => {
           variant="outline"
           size="sm"
           className="cursor-pointer"
-          onClick={() => {
+          onClick={async () => {
             setIsRefetching(true);
+            await refetch(address as `0x${string}`, Number(chainId));
+            setIsRefetching(false);
           }}
           disabled={isRefetching || !address}
         >
