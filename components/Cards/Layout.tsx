@@ -1,3 +1,5 @@
+// not using this component anymore
+
 "use client";
 
 import AssetsCard from "./AssetsCard";
