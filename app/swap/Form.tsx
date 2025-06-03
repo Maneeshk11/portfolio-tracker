@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { usePortfolioStore } from "@/lib/providers/portfolio-store-provider";
-import { Wallet } from "lucide-react";
+import { ArrowDownUp, Wallet } from "lucide-react";
 import Image from "next/image";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -153,222 +153,232 @@ const SwapForm = () => {
         className="flex flex-col gap-4 items-center w-full"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        <div className="flex flex-col gap-2 border rounded p-4 shadow-2xl shadow-primary/50 dark:shadow-primary/50 w-full">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Send</span>
-
-            <span className="text-sm font-medium flex items-center gap-2 text-gray-500">
-              <Wallet className="w-4 h-4" />
-              {form.watch("sendAsset").amount}
-            </span>
+        <div className="flex flex-col gap-4 items-center w-full relative">
+          <div className="flex items-center justify-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border rounded-full p-2 z-[100]">
+            <ArrowDownUp className="w-5 h-5 " />
           </div>
-          <FormField
-            control={form.control}
-            name="sendAsset"
-            render={({ field }) => (
-              <div className="flex justify-between items-center w-full">
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      className={`${
-                        !validSwap ? "text-primary" : "text-gray-500"
-                      } shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
-                      placeholder="0"
-                      type="number"
-                      value={field.value.swapValue ?? ""}
-                      onChange={(e) => {
-                        const inputValue = e.target.value;
+          <div className="flex flex-col gap-2 border rounded p-4 shadow-2xl shadow-primary/50 dark:shadow-primary/50 w-full relative z-10">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Send</span>
 
-                        // Handle empty string - don't convert to 0
-                        if (inputValue === "") {
+              <span className="text-sm font-medium flex items-center gap-2 text-gray-500">
+                <Wallet className="w-4 h-4" />
+                {form.watch("sendAsset").amount}
+              </span>
+            </div>
+            <FormField
+              control={form.control}
+              name="sendAsset"
+              render={({ field }) => (
+                <div className="flex justify-between items-center w-full">
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        className={`${
+                          !validSwap ? "text-primary" : "text-gray-500"
+                        } shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none`}
+                        placeholder="0"
+                        type="number"
+                        value={field.value.swapValue ?? ""}
+                        onChange={(e) => {
+                          const inputValue = e.target.value;
+
+                          // Handle empty string - don't convert to 0
+                          if (inputValue === "") {
+                            field.onChange({
+                              ...field.value,
+                              swapValue: undefined,
+                            });
+
+                            // Clear receive input when send input is empty
+                            form.setValue("receiveAsset", {
+                              ...form.getValues("receiveAsset"),
+                              swapValue: undefined,
+                            });
+                            setValidSwap(false);
+                            return;
+                          }
+
+                          const newValue = Number(inputValue);
                           field.onChange({
                             ...field.value,
-                            swapValue: undefined,
+                            swapValue: newValue,
                           });
 
-                          // Clear receive input when send input is empty
-                          form.setValue("receiveAsset", {
-                            ...form.getValues("receiveAsset"),
-                            swapValue: undefined,
-                          });
+                          // Also handle the case when value is 0
+                          if (newValue === 0) {
+                            form.setValue("receiveAsset", {
+                              ...form.getValues("receiveAsset"),
+                              swapValue: 0,
+                            });
+                            setValidSwap(false);
+                            return;
+                          }
+
+                          // Reset validSwap to false when user starts typing, will be set to true by API response
                           setValidSwap(false);
-                          return;
-                        }
 
-                        const newValue = Number(inputValue);
-                        field.onChange({
-                          ...field.value,
-                          swapValue: newValue,
-                        });
+                          // Only debounce if we have a valid value and both assets are selected
+                          if (
+                            newValue > 0 &&
+                            field.value.address &&
+                            form.getValues("receiveAsset").address
+                          ) {
+                            debouncedHandleChange({
+                              sendAsset: {
+                                ...field.value,
+                                swapValue: newValue,
+                              },
+                              receiveAsset: form.getValues("receiveAsset"),
+                            });
+                          }
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
 
-                        // Also handle the case when value is 0
-                        if (newValue === 0) {
-                          form.setValue("receiveAsset", {
-                            ...form.getValues("receiveAsset"),
-                            swapValue: 0,
-                          });
-                          setValidSwap(false);
-                          return;
-                        }
-
-                        // Reset validSwap to false when user starts typing, will be set to true by API response
-                        setValidSwap(false);
-
-                        // Only debounce if we have a valid value and both assets are selected
-                        if (
-                          newValue > 0 &&
-                          field.value.address &&
-                          form.getValues("receiveAsset").address
-                        ) {
-                          debouncedHandleChange({
-                            sendAsset: { ...field.value, swapValue: newValue },
-                            receiveAsset: form.getValues("receiveAsset"),
-                          });
-                        }
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
-
-                <FormItem>
-                  <FormControl>
-                    <Select
-                      value={field.value.address}
-                      onValueChange={(value) => {
-                        const asset = assets.find(
-                          (asset) => asset.address === value
-                        );
-                        field.onChange({
-                          ...field.value,
-                          address: value,
-                          amount: Number(asset?.amount),
-                          decimals: Number(asset?.decimals),
-                          symbol: asset?.symbol ?? "",
-                          image: asset?.image ?? "",
-                        });
-
-                        // Reset validSwap when asset changes
-                        setValidSwap(false);
-                      }}
-                    >
-                      <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
-                        <SelectValue placeholder="Select a token" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {assets.map((asset) => (
-                          <SelectItem
-                            key={asset.address}
-                            value={asset.address}
-                            className="flex items-center gap-2"
-                          >
-                            {asset.image && (
-                              <Image
-                                src={asset.image ?? ""}
-                                alt={asset.symbol ?? ""}
-                                width={20}
-                                height={20}
-                              />
-                            )}
-                            <span>{asset.symbol}</span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              </div>
-            )}
-          />
-        </div>
-
-        <div className="flex flex-col gap-2 border rounded p-4  shadow-2xl shadow-primary/50 dark:shadow-primary/50 w-full">
-          <span className="text-sm font-medium">Receive</span>
-          <FormField
-            control={form.control}
-            name="receiveAsset"
-            render={({ field }) => (
-              <div className="flex justify-between items-center w-full">
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                      placeholder="0"
-                      type="number"
-                      value={field.value.swapValue ?? ""}
-                      onChange={(e) => {
-                        const inputValue = e.target.value;
-
-                        // Handle empty string - don't convert to 0
-                        if (inputValue === "") {
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        value={field.value.address}
+                        onValueChange={(value) => {
+                          const asset = assets.find(
+                            (asset) => asset.address === value
+                          );
                           field.onChange({
                             ...field.value,
-                            swapValue: undefined,
+                            address: value,
+                            amount: Number(asset?.amount),
+                            decimals: Number(asset?.decimals),
+                            symbol: asset?.symbol ?? "",
+                            image: asset?.image ?? "",
                           });
+
+                          // Reset validSwap when asset changes
                           setValidSwap(false);
-                          return;
-                        }
+                        }}
+                      >
+                        <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
+                          <SelectValue placeholder="Select a token" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {assets.map((asset) => (
+                            <SelectItem
+                              key={asset.address}
+                              value={asset.address}
+                              className="flex items-center gap-2"
+                            >
+                              {asset.image && (
+                                <Image
+                                  src={asset.image ?? ""}
+                                  alt={asset.symbol ?? ""}
+                                  width={20}
+                                  height={20}
+                                />
+                              )}
+                              <span>{asset.symbol}</span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                </div>
+              )}
+            />
+          </div>
 
-                        field.onChange({
-                          ...field.value,
-                          swapValue: Number(inputValue),
-                        });
+          <div className="flex flex-col gap-2 border rounded p-4  shadow-2xl shadow-primary/50 dark:shadow-primary/50 w-full relative z-10">
+            <span className="text-sm font-medium">Receive</span>
+            <FormField
+              control={form.control}
+              name="receiveAsset"
+              render={({ field }) => (
+                <div className="flex justify-between items-center w-full">
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        className="shadow-none border-none bg-none focus-visible:ring-0 dark:bg-transparent p-0 text-xl dark:text-xl [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        placeholder="0"
+                        type="number"
+                        value={field.value.swapValue ?? ""}
+                        onChange={(e) => {
+                          const inputValue = e.target.value;
 
-                        // Reset validSwap when receive input is manually changed
-                        setValidSwap(false);
-                      }}
-                    />
-                  </FormControl>
-                </FormItem>
+                          // Handle empty string - don't convert to 0
+                          if (inputValue === "") {
+                            field.onChange({
+                              ...field.value,
+                              swapValue: undefined,
+                            });
+                            setValidSwap(false);
+                            return;
+                          }
 
-                <FormItem>
-                  <FormControl>
-                    <Select
-                      value={field.value.address}
-                      onValueChange={(value) => {
-                        const asset = assets.find(
-                          (asset) => asset.address === value
-                        );
-                        field.onChange({
-                          ...field.value,
-                          address: value,
-                          amount: Number(asset?.amount),
-                          decimals: Number(asset?.decimals),
-                          symbol: asset?.symbol ?? "",
-                          image: asset?.image ?? "",
-                        });
+                          field.onChange({
+                            ...field.value,
+                            swapValue: Number(inputValue),
+                          });
 
-                        // Reset validSwap when asset changes
-                        setValidSwap(false);
-                      }}
-                    >
-                      <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
-                        <SelectValue placeholder="Select a token" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {assets.map((asset) => (
-                          <SelectItem
-                            key={asset.address}
-                            value={asset.address}
-                            className="flex items-center gap-2"
-                          >
-                            {asset.image && (
-                              <Image
-                                src={asset.image ?? ""}
-                                alt={asset.symbol ?? ""}
-                                width={20}
-                                height={20}
-                              />
-                            )}
-                            <span className="font-medium">{asset.symbol}</span>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              </div>
-            )}
-          />
+                          // Reset validSwap when receive input is manually changed
+                          setValidSwap(false);
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+
+                  <FormItem>
+                    <FormControl>
+                      <Select
+                        value={field.value.address}
+                        onValueChange={(value) => {
+                          const asset = assets.find(
+                            (asset) => asset.address === value
+                          );
+                          field.onChange({
+                            ...field.value,
+                            address: value,
+                            amount: Number(asset?.amount),
+                            decimals: Number(asset?.decimals),
+                            symbol: asset?.symbol ?? "",
+                            image: asset?.image ?? "",
+                          });
+
+                          // Reset validSwap when asset changes
+                          setValidSwap(false);
+                        }}
+                      >
+                        <SelectTrigger className="w-40 bg-transparent dark:bg-transparent rounded-full">
+                          <SelectValue placeholder="Select a token" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {assets.map((asset) => (
+                            <SelectItem
+                              key={asset.address}
+                              value={asset.address}
+                              className="flex items-center gap-2"
+                            >
+                              {asset.image && (
+                                <Image
+                                  src={asset.image ?? ""}
+                                  alt={asset.symbol ?? ""}
+                                  width={20}
+                                  height={20}
+                                />
+                              )}
+                              <span className="font-medium">
+                                {asset.symbol}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                  </FormItem>
+                </div>
+              )}
+            />
+          </div>
         </div>
         <Button
           type="submit"
