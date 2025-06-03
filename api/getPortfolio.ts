@@ -37,6 +37,7 @@ const getPortfolio = async (address: `0x${string}`, chainId: number) => {
     address: "0x0000000000000000000000000000000000000000",
     name: "Ether",
     symbol: nativeEth.symbol,
+    decimals: nativeEth.decimals,
     amount: formatUnits(nativeEth.value, nativeEth.decimals),
     image:
       "https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880",
@@ -48,6 +49,7 @@ const getPortfolio = async (address: `0x${string}`, chainId: number) => {
       address: token.contractAddress as `0x${string}`,
       name: token.name,
       symbol: token.symbol,
+      decimals: Number(token.decimals),
       amount: formatUnits(
         BigInt(token.rawBalance ?? 0),
         Number(token.decimals)
