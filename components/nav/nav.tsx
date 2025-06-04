@@ -23,6 +23,8 @@ const Nav = () => {
         <Separator orientation="vertical" className="h-4" />
         <Link href="/swap">Swap</Link>
         <Separator orientation="vertical" className="h-4" />
+        <Link href="/orderbook">Orderbook</Link>
+        <Separator orientation="vertical" className="h-4" />
         <ChatSheet />
       </div>
       <div className="flex items-center gap-4">
