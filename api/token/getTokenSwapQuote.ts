@@ -19,7 +19,7 @@ export const getTokenSwapQuote = async (
   try {
     const d = await axios.get(`https://api.1inch.dev/swap/v6.0/1/quote`, {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_1INCH_API_KEY}`,
+        Authorization: `Bearer ${process.env.ONE_INCH_API_KEY}`,
       },
       params: {
         src: sendAsset?.address,

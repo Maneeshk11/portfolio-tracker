@@ -154,7 +154,7 @@ const SwapForm = () => {
         onSubmit={form.handleSubmit(handleSubmit)}
       >
         <div className="flex flex-col gap-4 items-center w-full relative">
-          <div className=" flex items-center justify-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border rounded-full p-2 z-50 bg-foreground text-background">
+          <div className=" flex items-center justify-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 border rounded-full p-2 z-50 bg-foreground text-background ">
             <ArrowDownUp className="w-5 h-5 " />
           </div>
           <div className="flex flex-col gap-2 border rounded p-4 shadow-2xl shadow-primary/50 dark:shadow-primary/50 w-full relative z-10">
