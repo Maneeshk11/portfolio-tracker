@@ -13,6 +13,7 @@ export type Asset = {
   amount?: string;
   price?: number;
   total?: Worth;
+  decimals?: number;
 };
 
 export type Transaction = AssetTransfersWithMetadataResponse["transfers"][0];
